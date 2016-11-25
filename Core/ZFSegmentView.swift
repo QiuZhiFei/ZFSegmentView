@@ -9,32 +9,50 @@
 import Foundation
 import UIKit
 
-private let animationDuration: TimeInterval = 0.3
-
-struct ZFSegmentConfig {
+public struct ZFSegmentConfig {
   var normalAttributedText: NSMutableAttributedString?
   var selectedAttributedText: NSMutableAttributedString?
   var indicatorColor: UIColor = UIColor.green
   var indicatorBottom: CGFloat = 2
   var indicatorHeight: CGFloat = 0.5
+  
+  public init(normalAttributedText: NSMutableAttributedString?,
+              selectedAttributedText:NSMutableAttributedString?,
+              indicatorColor: UIColor = UIColor.green,
+              indicatorBottom: CGFloat = 2,
+              indicatorHeight: CGFloat = 0.5) {
+    self.normalAttributedText = normalAttributedText
+    self.selectedAttributedText = selectedAttributedText
+    self.indicatorColor = indicatorColor
+    self.indicatorBottom = indicatorBottom
+    self.indicatorHeight = indicatorHeight
+  }
 }
 
-class ZFSegmentView: UIView {
+open class ZFSegmentView: UIView {
   
-  var didSelectHandler: ((_ oldIndex: Int, _ newIndex: Int)->())?
-  var startIndex: Int = 0 {
+  public var didSelectHandler: ((_ oldIndex: Int, _ newIndex: Int)->())?
+  public var startIndex: Int = 0 {
     didSet {
       selectedIndex = startIndex
     }
   }
-  var selectedIndex: Int = 0 {
+  public internal(set) var selectedIndex: Int = 0 {
     didSet {
       setNeedsLayout()
       layoutIfNeeded()
     }
   }
+  public func setSelectedIndex(index: Int) {
+    let oldIndex = selectedIndex
+    self.selectedIndex = index
+    if let handler = didSelectHandler {
+      handler(oldIndex, selectedIndex)
+    }
+  }
+  public var animationDuration: TimeInterval = 0.3
   
-  init(frame: CGRect, contentEdge: UIEdgeInsets, configs: [ZFSegmentConfig]) {
+  public init(frame: CGRect, contentEdge: UIEdgeInsets, configs: [ZFSegmentConfig]) {
     super.init(frame: frame)
     
     self.contentEdge = contentEdge
@@ -63,13 +81,13 @@ class ZFSegmentView: UIView {
     
   }
   
-  required init?(coder aDecoder: NSCoder) {
+  required public init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
   
   //MARK: Override
   
-  override func layoutSubviews() {
+  override open func layoutSubviews() {
     super.layoutSubviews()
     contentView.frame = CGRect(x: contentEdge.left, y: contentEdge.top, width: bounds.size.width - contentEdge.left - contentEdge.right, height: bounds.size.height - contentEdge.top - contentEdge.bottom)
     
@@ -144,11 +162,8 @@ class ZFSegmentView: UIView {
   @objc private func tapSelected(ges: UITapGestureRecognizer) {
     if let gesView = ges.view {
       let label = gesView as! ZFSegmentLabel
-      let oldIndex = selectedIndex
-      selectedIndex = segmentlabels.index(of: label)!
-      if let handler = didSelectHandler {
-        handler(oldIndex, selectedIndex)
-      }
+      let index = segmentlabels.index(of: label)!
+      setSelectedIndex(index: index)
     }
   }
   
@@ -165,7 +180,7 @@ class ZFSegmentView: UIView {
   
 }
 
-class ZFSegmentLabel: UILabel {
+private class ZFSegmentLabel: UILabel {
   
   var selected: Bool = false {
     didSet {
