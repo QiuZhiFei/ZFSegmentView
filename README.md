@@ -5,7 +5,7 @@
 **Cocoapods**
 
 ```
-Add pod 'SMSegmentView', '~> 0.0.1' to Podfile.
+Add pod 'SMSegmentView', '~> 0.0.2' to Podfile.
 ```
 
 ## Requirements
@@ -36,7 +36,7 @@ let configs = [ZFSegmentConfig(
 
 ```
 let segmentView = ZFSegmentView(frame: .zero,
-                                        contentEdge: UIEdgeInsetsMake(0, 16, 0, 16), configs: configs)
+                                        contentEdge: UIEdgeInsetsMake(0, 0, 0, 0), configs: configs, type: .center)
     segmentView.backgroundColor = UIColor.white
     segmentView.frame = CGRect(x: 20, y: 164, width: self.view.bounds.size.width - 40, height: 40)
     segmentView.animationDuration = 0.2
