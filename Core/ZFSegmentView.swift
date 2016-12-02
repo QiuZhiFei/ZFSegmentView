@@ -29,6 +29,11 @@ public struct ZFSegmentConfig {
   }
 }
 
+public enum ZFSegmentViewLayoutType {
+  case manual
+  case center
+}
+
 open class ZFSegmentView: UIView {
   
   public var didSelectHandler: ((_ oldIndex: Int, _ newIndex: Int)->())?
@@ -51,12 +56,14 @@ open class ZFSegmentView: UIView {
     }
   }
   public var animationDuration: TimeInterval = 0.3
+  public internal(set) var type: ZFSegmentViewLayoutType = .manual
   
-  public init(frame: CGRect, contentEdge: UIEdgeInsets, configs: [ZFSegmentConfig]) {
+  public init(frame: CGRect, contentEdge: UIEdgeInsets, configs: [ZFSegmentConfig], type: ZFSegmentViewLayoutType) {
     super.init(frame: frame)
     
     self.contentEdge = contentEdge
     self.configs = configs
+    self.type = type
     itemCount = configs.count
     
     addSubview(contentView)
@@ -105,13 +112,24 @@ open class ZFSegmentView: UIView {
     }
     var itemSpace: CGFloat = 0 // 间距
     if itemCount > 1 {
-      itemSpace = (contentView.bounds.width - itemWidth)/CGFloat(itemCount - 1)
+      switch type {
+      case .center:
+        itemSpace = (contentView.bounds.width - itemWidth)/CGFloat(itemCount + 1)
+      case .manual:
+        itemSpace = (contentView.bounds.width - itemWidth)/CGFloat(itemCount - 1)
+      }
     }
     
     var segmentLabelFrames: [CGRect] = []
     var previousFrame: CGRect?
     for index in 0...(itemCount - 1) {
       var origin_x: CGFloat = 0
+      switch type {
+      case .center:
+        origin_x = itemSpace
+      case .manual:
+        origin_x = 0
+      }
       if let previousFrame = previousFrame  {
         origin_x = previousFrame.origin.x + previousFrame.size.width + itemSpace
       }
