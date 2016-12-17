@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "ZFSegmentView"
-  s.version      = "0.0.2"
+  s.version      = "0.0.3"
   s.summary      = "Custom segmented view for iOS8 / Swift3 and above"
 
   # This description is used to generate tags and improve search results.
