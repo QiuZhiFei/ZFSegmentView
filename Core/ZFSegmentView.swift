@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-public struct ZFSegmentConfig {
+public class ZFSegmentConfig: NSObject {
   var normalAttributedText: NSMutableAttributedString?
   var selectedAttributedText: NSMutableAttributedString?
   var indicatorColor: UIColor = UIColor.green
@@ -21,6 +21,7 @@ public struct ZFSegmentConfig {
               indicatorColor: UIColor = UIColor.green,
               indicatorBottom: CGFloat = 2,
               indicatorHeight: CGFloat = 0.5) {
+    super.init()
     self.normalAttributedText = normalAttributedText
     self.selectedAttributedText = selectedAttributedText
     self.indicatorColor = indicatorColor
@@ -29,8 +30,8 @@ public struct ZFSegmentConfig {
   }
 }
 
-public enum ZFSegmentViewLayoutType {
-  case manual
+@objc public enum ZFSegmentViewLayoutType: Int {
+  case manual = 0
   case center
 }
 
