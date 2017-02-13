@@ -42,6 +42,13 @@ class ViewController: UIViewController {
     button.frame = CGRect(x: 30, y: 300, width: 200, height: 40)
     button.addTarget(self, action: #selector(self.updateSelectedIndex), for: .touchUpInside)
     view.addSubview(button)
+    
+    let updateButton = UIButton(type: .system)
+    updateButton.setTitle("update configs", for: .normal)
+    updateButton.setTitleColor(UIColor.black, for: .normal)
+    updateButton.frame = CGRect(x: 30, y: 360, width: 200, height: 40)
+    updateButton.addTarget(self, action: #selector(self.updateConfigs), for: .touchUpInside)
+    view.addSubview(updateButton)
     // Do any additional setup after loading the view, typically from a nib.
   }
   
@@ -53,6 +60,12 @@ class ViewController: UIViewController {
   @objc private func updateSelectedIndex() {
     constantSegmentView.setSelectedIndex(index: constantSegmentView.startIndex)
     variableSegmentView.setSelectedIndex(index: variableSegmentView.startIndex)
+  }
+  
+  @objc private func updateConfigs() {
+    var configs = constantSegmentView.configs
+    configs.remove(at: 0)
+    constantSegmentView.configure(configs: configs)
   }
   
   private func setupConstantSegmentView() {
@@ -85,6 +98,10 @@ class ViewController: UIViewController {
                                     contentEdge: UIEdgeInsetsMake(0, 16, 0, 0), configs: configs, type: .center)
     segmentView.backgroundColor = UIColor.white
     segmentView.frame = CGRect(x: 0, y: 64, width: self.view.bounds.size.width, height: 40)
+    segmentView.contentLabelFramesChangedHandler = {
+      (frames) in
+      print("label frames == \(frames)")
+    }
     segmentView.startIndex = 1
     segmentView.didSelectHandler = {
       (oldIndex, newIndex) in

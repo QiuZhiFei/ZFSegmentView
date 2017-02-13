@@ -59,16 +59,32 @@ open class ZFSegmentView: UIView {
   public var animationDuration: TimeInterval = 0.3
   public internal(set) var type: ZFSegmentViewLayoutType = .manual
   
-  public init(frame: CGRect, contentEdge: UIEdgeInsets, configs: [ZFSegmentConfig], type: ZFSegmentViewLayoutType) {
-    super.init(frame: frame)
-    
-    self.contentEdge = contentEdge
+  public var contentLabelFramesChangedHandler: (([CGRect])->())?
+  public private(set) var segmentLabelFrames: [CGRect] {
+    set {
+      if newValue != _segmentLabelFrames {
+        _segmentLabelFrames = newValue
+        if let handler = contentLabelFramesChangedHandler {
+          handler(_segmentLabelFrames)
+        }
+      }
+    }
+    get {
+      return _segmentLabelFrames
+    }
+  }
+  
+  public private(set) var configs: [ZFSegmentConfig] = []
+  public func configure(configs: [ZFSegmentConfig], needsLayout: Bool = true) {
     self.configs = configs
-    self.type = type
     itemCount = configs.count
     
-    addSubview(contentView)
-    addSubview(indicatorView)
+    for label in segmentlabels {
+      label.removeFromSuperview()
+    }
+    normalSizes = []
+    selectedSizes = []
+    segmentlabels = []
     
     let label = UILabel(frame: .zero)
     for config in configs {
@@ -87,6 +103,24 @@ open class ZFSegmentView: UIView {
       segmentLabel.addGestureRecognizer(tap)
     }
     
+    if needsLayout {
+      setNeedsLayout()
+      layoutIfNeeded()
+    }
+  }
+  
+  public private(set) var segmentlabels: [ZFSegmentLabel] = []
+  
+  public init(frame: CGRect, contentEdge: UIEdgeInsets, configs: [ZFSegmentConfig], type: ZFSegmentViewLayoutType) {
+    super.init(frame: frame)
+    
+    self.contentEdge = contentEdge
+    self.type = type
+    
+    addSubview(contentView)
+    addSubview(indicatorView)
+    
+    self.configure(configs: configs, needsLayout: false)
   }
   
   required public init?(coder aDecoder: NSCoder) {
@@ -153,6 +187,8 @@ open class ZFSegmentView: UIView {
       }
     }
     
+    self.segmentLabelFrames = segmentLabelFrames
+    
     let indicatorViewFrame = CGRect(x: selectedLabelFrame.origin.x + self.contentView.frame.origin.x, y: self.bounds.size.height - selectedConfig.indicatorBottom - selectedConfig.indicatorHeight, width: selectedLabelFrame.size.width, height: selectedConfig.indicatorHeight)
     if self.indicatorView.frame.size.height == 0 {
       self.indicatorView.frame = indicatorViewFrame
@@ -163,8 +199,8 @@ open class ZFSegmentView: UIView {
                      animations: {
                       self.indicatorView.frame = indicatorViewFrame
                       self.indicatorView.backgroundColor = selectedConfig.indicatorColor
-        }, completion: { (finished) in
-          resetSegmentLabels()
+      }, completion: { (finished) in
+        resetSegmentLabels()
       })
     }
   }
@@ -175,8 +211,7 @@ open class ZFSegmentView: UIView {
   fileprivate var itemCount = 0
   fileprivate var normalSizes: [CGSize] = []
   fileprivate var selectedSizes: [CGSize] = []
-  fileprivate var segmentlabels: [ZFSegmentLabel] = []
-  fileprivate var configs: [ZFSegmentConfig] = []
+  fileprivate var _segmentLabelFrames: [CGRect] = []
   
   @objc private func tapSelected(ges: UITapGestureRecognizer) {
     if let gesView = ges.view {
@@ -199,14 +234,14 @@ open class ZFSegmentView: UIView {
   
 }
 
-private class ZFSegmentLabel: UILabel {
+public class ZFSegmentLabel: UILabel {
   
   var selected: Bool = false {
     didSet {
       resetAttri()
     }
   }
-  var config: ZFSegmentConfig?
+  internal(set) var config: ZFSegmentConfig?
   
   func configure(config: ZFSegmentConfig) {
     self.config = config
