@@ -95,7 +95,9 @@ class ViewController: UIViewController {
                     indicatorHeight: indicatorHeight)]
     
     let segmentView = ZFSegmentView(frame: .zero,
-                                    contentEdge: UIEdgeInsetsMake(0, 16, 0, 0), configs: configs, type: .center)
+                                    contentEdge: .zero,
+                                    configs: configs,
+                                    type: .center)
     segmentView.backgroundColor = UIColor.white
     segmentView.frame = CGRect(x: 0, y: 64, width: self.view.bounds.size.width, height: 40)
     segmentView.contentLabelFramesChangedHandler = {
@@ -141,7 +143,8 @@ class ViewController: UIViewController {
                     indicatorHeight: indicatorHeight)]
     
     let segmentView = ZFSegmentView(frame: .zero,
-                                        contentEdge: UIEdgeInsetsMake(0, 0, 0, 0), configs: configs, type: .center)
+                                        contentEdge: UIEdgeInsetsMake(0, 10, 0, 0), configs: configs,
+                                        type: .manual)
     segmentView.backgroundColor = UIColor.white
     segmentView.frame = CGRect(x: 20, y: 164, width: self.view.bounds.size.width - 40, height: 40)
     segmentView.animationDuration = 0.2
