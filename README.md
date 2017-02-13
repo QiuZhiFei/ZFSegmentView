@@ -5,7 +5,7 @@
 **Cocoapods**
 
 ```
-Add pod 'SMSegmentView', '~> 0.0.2' to Podfile.
+Add pod 'ZFSegmentView', '~> 0.0.3' to Podfile.
 ```
 
 ## Requirements
