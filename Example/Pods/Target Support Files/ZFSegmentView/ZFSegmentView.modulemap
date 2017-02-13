@@ -1,0 +1,6 @@
+framework module ZFSegmentView {
+  umbrella header "ZFSegmentView-umbrella.h"
+
+  export *
+  module * { export * }
+}
