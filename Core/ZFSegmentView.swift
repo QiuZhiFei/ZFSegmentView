@@ -97,10 +97,6 @@ open class ZFSegmentView: UIView {
       segmentLabel.configure(config: config)
       contentView.addSubview(segmentLabel)
       segmentlabels.append(segmentLabel)
-      
-      segmentLabel.isUserInteractionEnabled = true
-      let tap = UITapGestureRecognizer(target: self, action: #selector(ZFSegmentView.tapSelected(ges:)))
-      segmentLabel.addGestureRecognizer(tap)
     }
     
     if needsLayout {
@@ -121,6 +117,11 @@ open class ZFSegmentView: UIView {
     addSubview(indicatorView)
     
     self.configure(configs: configs, needsLayout: false)
+    
+    let tap = UITapGestureRecognizer(target: self, action: #selector(ZFSegmentView.tapSelected(ges:)))
+    tap.numberOfTapsRequired = 1
+    tap.numberOfTouchesRequired = 1
+    addGestureRecognizer(tap)
   }
   
   required public init?(coder aDecoder: NSCoder) {
@@ -167,6 +168,7 @@ open class ZFSegmentView: UIView {
       }
       if let previousFrame = previousFrame  {
         origin_x = previousFrame.origin.x + previousFrame.size.width + itemSpace
+       
       }
       let origin_y: CGFloat = 0
       let origin_bottom: CGFloat = origin_y
@@ -188,6 +190,35 @@ open class ZFSegmentView: UIView {
     }
     
     self.segmentLabelFrames = segmentLabelFrames
+    
+    var tap_origin_x_s: [CGFloat] = []
+    var tap_origin_x: CGFloat = 0
+    var previous_tap_frame: CGRect?
+    for frame in segmentLabelFrames {
+      if let previous_tap_frame = previous_tap_frame {
+        tap_origin_x = frame.origin.x - (frame.origin.x - previous_tap_frame.origin.x - previous_tap_frame.width)/2.0 + contentView.frame.origin.x
+      }
+      previous_tap_frame = frame
+      tap_origin_x_s.append(tap_origin_x)
+    }
+    
+    var tap_width_s: [CGFloat] = []
+    var tap_width: CGFloat = 0
+    var previous_tap_origin_x: CGFloat?
+    for origin_x in tap_origin_x_s {
+      if let previous_tap_origin_x = previous_tap_origin_x {
+        tap_width = origin_x - previous_tap_origin_x
+        tap_width_s.append(tap_width)
+      }
+      previous_tap_origin_x = origin_x
+    }
+    tap_width_s.append(self.bounds.width - (tap_origin_x_s.last ?? 0))
+    
+    var tapFrames: [CGRect] = []
+    for (index, tap_origin_x) in tap_origin_x_s.enumerated() {
+      tapFrames.append(CGRect(x: tap_origin_x, y: 0, width: tap_width_s[index], height: self.bounds.size.height))
+    }
+    self.tapFrames = tapFrames
     
     let indicatorViewFrame = CGRect(x: selectedLabelFrame.origin.x + self.contentView.frame.origin.x, y: self.bounds.size.height - selectedConfig.indicatorBottom - selectedConfig.indicatorHeight, width: selectedLabelFrame.size.width, height: selectedConfig.indicatorHeight)
     if self.indicatorView.frame.size.height == 0 {
@@ -212,12 +243,14 @@ open class ZFSegmentView: UIView {
   fileprivate var normalSizes: [CGSize] = []
   fileprivate var selectedSizes: [CGSize] = []
   fileprivate var _segmentLabelFrames: [CGRect] = []
+  fileprivate var tapFrames: [CGRect] = []
   
   @objc private func tapSelected(ges: UITapGestureRecognizer) {
-    if let gesView = ges.view {
-      let label = gesView as! ZFSegmentLabel
-      let index = segmentlabels.index(of: label)!
-      setSelectedIndex(index: index)
+    let point = ges.location(in: ges.view!)
+    for (index, frame) in tapFrames.enumerated() {
+      if frame.contains(point) {
+        setSelectedIndex(index: index)
+      }
     }
   }
   
