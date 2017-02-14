@@ -5,7 +5,7 @@
 **Cocoapods**
 
 ```
-Add pod 'ZFSegmentView', '~> 0.0.3' to Podfile.
+Add pod 'ZFSegmentView', '~> 0.0.4' to Podfile.
 ```
 
 ## Requirements
@@ -49,3 +49,4 @@ let segmentView = ZFSegmentView(frame: .zero,
       }
     }
 ```
+
