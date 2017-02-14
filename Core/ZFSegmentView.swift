@@ -33,6 +33,7 @@ public class ZFSegmentConfig: NSObject {
 @objc public enum ZFSegmentViewLayoutType: Int {
   case manual = 0
   case center
+  case same
 }
 
 open class ZFSegmentView: UIView {
@@ -153,6 +154,9 @@ open class ZFSegmentView: UIView {
         itemSpace = (contentView.bounds.width - itemWidth)/CGFloat(itemCount + 1)
       case .manual:
         itemSpace = (contentView.bounds.width - itemWidth)/CGFloat(itemCount - 1)
+      case .same:
+        itemSpace = (contentView.bounds.width - itemWidth)/CGFloat(itemCount)
+        
       }
     }
     
@@ -165,6 +169,8 @@ open class ZFSegmentView: UIView {
         origin_x = itemSpace
       case .manual:
         origin_x = 0
+      case .same:
+        origin_x = itemSpace/2.0
       }
       if let previousFrame = previousFrame  {
         origin_x = previousFrame.origin.x + previousFrame.size.width + itemSpace
