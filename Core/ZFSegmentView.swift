@@ -179,9 +179,6 @@ open class ZFSegmentView: UIView {
       previousFrame = frame
     }
     
-    let selectedLabelFrame = segmentLabelFrames[selectedIndex]
-    let selectedConfig = configs[selectedIndex]
-    
     func resetSegmentLabels() {
       for (index, label) in self.segmentlabels.enumerated() {
         label.selected = index == self.selectedIndex
@@ -220,20 +217,29 @@ open class ZFSegmentView: UIView {
     }
     self.tapFrames = tapFrames
     
-    let indicatorViewFrame = CGRect(x: selectedLabelFrame.origin.x + self.contentView.frame.origin.x, y: self.bounds.size.height - selectedConfig.indicatorBottom - selectedConfig.indicatorHeight, width: selectedLabelFrame.size.width, height: selectedConfig.indicatorHeight)
-    if self.indicatorView.frame.size.height == 0 {
-      self.indicatorView.frame = indicatorViewFrame
-      self.indicatorView.backgroundColor = selectedConfig.indicatorColor
-      resetSegmentLabels()
-    } else {
-      UIView.animate(withDuration: animationDuration,
-                     animations: {
-                      self.indicatorView.frame = indicatorViewFrame
-                      self.indicatorView.backgroundColor = selectedConfig.indicatorColor
-      }, completion: { (finished) in
+    if selectedIndex >= 0, selectedIndex < segmentLabelFrames.count {
+      let selectedLabelFrame = segmentLabelFrames[selectedIndex]
+      let selectedConfig = configs[selectedIndex]
+      
+      let indicatorViewFrame = CGRect(x: selectedLabelFrame.origin.x + self.contentView.frame.origin.x, y: self.bounds.size.height - selectedConfig.indicatorBottom - selectedConfig.indicatorHeight, width: selectedLabelFrame.size.width, height: selectedConfig.indicatorHeight)
+      if self.indicatorView.frame.size.height == 0 {
+        self.indicatorView.frame = indicatorViewFrame
+        self.indicatorView.backgroundColor = selectedConfig.indicatorColor
         resetSegmentLabels()
-      })
+      } else {
+        UIView.animate(withDuration: animationDuration,
+                       animations: {
+                        self.indicatorView.frame = indicatorViewFrame
+                        self.indicatorView.backgroundColor = selectedConfig.indicatorColor
+        }, completion: { (finished) in
+          resetSegmentLabels()
+        })
+      }
+    } else {
+      self.indicatorView.frame = .zero
+      resetSegmentLabels()
     }
+    
   }
   
   //MARK: Private Methods
