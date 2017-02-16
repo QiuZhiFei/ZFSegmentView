@@ -99,7 +99,6 @@ open class ZFSegmentView: UIView {
       contentView.addSubview(segmentLabel)
       segmentlabels.append(segmentLabel)
     }
-    
     if needsLayout {
       setNeedsLayout()
       layoutIfNeeded()
@@ -133,6 +132,16 @@ open class ZFSegmentView: UIView {
   
   override open func layoutSubviews() {
     super.layoutSubviews()
+    if self.frame.size.height == 0 {
+      contentView.isHidden = true
+      return
+    }
+    if self.frame.size.width == 0 {
+      contentView.isHidden = true
+      return
+    }
+    
+    contentView.isHidden = false
     contentView.frame = CGRect(x: contentEdge.left, y: contentEdge.top, width: bounds.size.width - contentEdge.left - contentEdge.right, height: bounds.size.height - contentEdge.top - contentEdge.bottom)
     
     var itemWidth: CGFloat = 0 // 总宽度
@@ -174,7 +183,7 @@ open class ZFSegmentView: UIView {
       }
       if let previousFrame = previousFrame  {
         origin_x = previousFrame.origin.x + previousFrame.size.width + itemSpace
-       
+        
       }
       let origin_y: CGFloat = 0
       let origin_bottom: CGFloat = origin_y
@@ -184,14 +193,6 @@ open class ZFSegmentView: UIView {
       segmentLabelFrames.append(frame)
       previousFrame = frame
     }
-    
-    func resetSegmentLabels() {
-      for (index, label) in self.segmentlabels.enumerated() {
-        label.selected = index == self.selectedIndex
-        label.frame = segmentLabelFrames[index]
-      }
-    }
-    
     self.segmentLabelFrames = segmentLabelFrames
     
     var tap_origin_x_s: [CGFloat] = []
@@ -223,6 +224,13 @@ open class ZFSegmentView: UIView {
     }
     self.tapFrames = tapFrames
     
+    func resetSegmentLabels() {
+      for (index, label) in self.segmentlabels.enumerated() {
+        label.selected = index == self.selectedIndex
+        label.frame = self.segmentLabelFrames[index]
+      }
+    }
+    
     if selectedIndex >= 0, selectedIndex < segmentLabelFrames.count {
       let selectedLabelFrame = segmentLabelFrames[selectedIndex]
       let selectedConfig = configs[selectedIndex]
@@ -235,8 +243,12 @@ open class ZFSegmentView: UIView {
       } else {
         UIView.animate(withDuration: animationDuration,
                        animations: {
-                        self.indicatorView.frame = indicatorViewFrame
-                        self.indicatorView.backgroundColor = selectedConfig.indicatorColor
+                        if self.indicatorView.frame != indicatorViewFrame {
+                          self.indicatorView.frame = indicatorViewFrame
+                        }
+                        if self.indicatorView.backgroundColor != selectedConfig.indicatorColor {
+                          self.indicatorView.backgroundColor = selectedConfig.indicatorColor
+                        }
         }, completion: { (finished) in
           resetSegmentLabels()
         })
