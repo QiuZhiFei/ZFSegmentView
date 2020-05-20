@@ -1,6 +1,6 @@
 {
   "name": "ZFSegmentView",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "summary": "Custom segmented view for iOS8 / Swift3 and above",
   "description": "Custom segmented view for iOS8 / Swift3 and above.",
   "homepage": "https://github.com/QiuZhiFei/ZFSegmentView",
@@ -14,13 +14,17 @@
   "platforms": {
     "ios": "8.0"
   },
+  "swift_versions": [
+    "5.0"
+  ],
   "source": {
     "git": "https://github.com/QiuZhiFei/ZFSegmentView.git",
-    "tag": "0.0.3"
+    "tag": "0.0.4"
   },
   "source_files": [
     "Classes",
     "Core/*.{swift}"
   ],
-  "requires_arc": true
+  "requires_arc": true,
+  "swift_version": "5.0"
 }

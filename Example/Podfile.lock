@@ -1,5 +1,5 @@
 PODS:
-  - ZFSegmentView (0.0.3)
+  - ZFSegmentView (0.0.4)
 
 DEPENDENCIES:
   - ZFSegmentView (from `../ZFSegmentView.podspec`)
@@ -9,8 +9,8 @@ EXTERNAL SOURCES:
     :path: "../ZFSegmentView.podspec"
 
 SPEC CHECKSUMS:
-  ZFSegmentView: 8fabc2174468e496836dc5c76564a3b3d0216747
+  ZFSegmentView: 5fab7d208fd18535773a5840d3b43a6a3dee1c71
 
-PODFILE CHECKSUM: b3f7b998a0546be25f1fcd11ebcc47018d2b32be
+PODFILE CHECKSUM: cbd20666589e3ede0c4b11a30f945df491782abf
 
-COCOAPODS: 1.2.0
+COCOAPODS: 1.9.1

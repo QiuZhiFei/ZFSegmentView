@@ -9,7 +9,7 @@
 import UIKit
 import ZFSegmentView
 
-private let zf_geenColor = UIColor(colorLiteralRed: 82/255.0, green: 179/255.0, blue: 114/255.0, alpha: 1)
+private let zf_geenColor = UIColor(red: 82/255.0, green: 179/255.0, blue: 114/255.0, alpha: 1)
 private let zf_redColor = UIColor.red
 
 private let indicatorHeight: CGFloat = 1
@@ -17,14 +17,14 @@ private let indicatorBottom: CGFloat = 2
 private let indicatorColor = zf_geenColor
 private let segmentFont = UIFont.systemFont(ofSize: 14)
 private let normalAttri = [
-  NSFontAttributeName: segmentFont,
-  NSForegroundColorAttributeName: UIColor.black]
+  NSAttributedString.Key.font: segmentFont,
+  NSAttributedString.Key.foregroundColor: UIColor.black]
 private let greenAttri = [
-  NSFontAttributeName: segmentFont,
-  NSForegroundColorAttributeName: zf_geenColor]
+  NSAttributedString.Key.font: segmentFont,
+  NSAttributedString.Key.foregroundColor: zf_geenColor]
 private let redAttri = [
-  NSFontAttributeName: segmentFont,
-  NSForegroundColorAttributeName: zf_redColor]
+  NSAttributedString.Key.font: segmentFont,
+  NSAttributedString.Key.foregroundColor: zf_redColor]
 
 class ViewController: UIViewController {
   
@@ -143,7 +143,7 @@ class ViewController: UIViewController {
                     indicatorHeight: indicatorHeight)]
     
     let segmentView = ZFSegmentView(frame: .zero,
-                                        contentEdge: UIEdgeInsetsMake(0, 10, 0, 0), configs: configs,
+                                    contentEdge: UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0), configs: configs,
                                         type: .manual)
     segmentView.backgroundColor = UIColor.white
     segmentView.frame = CGRect(x: 20, y: 164, width: self.view.bounds.size.width - 40, height: 40)
