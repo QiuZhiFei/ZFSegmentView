@@ -9,14 +9,14 @@
 import Foundation
 import UIKit
 
-public class ZFSegmentConfig: NSObject {
-  var normalAttributedText: NSMutableAttributedString?
-  var selectedAttributedText: NSMutableAttributedString?
-  var indicatorColor: UIColor = UIColor.green
-  var indicatorBottom: CGFloat = 2
-  var indicatorHeight: CGFloat = 0.5
+@objc public class ZFSegmentConfig: NSObject {
+  @objc var normalAttributedText: NSMutableAttributedString?
+  @objc var selectedAttributedText: NSMutableAttributedString?
+  @objc var indicatorColor: UIColor = UIColor.green
+  @objc var indicatorBottom: CGFloat = 2
+  @objc var indicatorHeight: CGFloat = 0.5
   
-  public init(normalAttributedText: NSMutableAttributedString?,
+  @objc public init(normalAttributedText: NSMutableAttributedString?,
               selectedAttributedText:NSMutableAttributedString?,
               indicatorColor: UIColor = UIColor.green,
               indicatorBottom: CGFloat = 2,
@@ -36,10 +36,10 @@ public class ZFSegmentConfig: NSObject {
   case same
 }
 
-open class ZFSegmentView: UIView {
+@objc open class ZFSegmentView: UIView {
   
-  public var didSelectHandler: ((_ oldIndex: Int, _ newIndex: Int)->())?
-  public var startIndex: Int = 0 {
+  @objc public var didSelectHandler: ((_ oldIndex: Int, _ newIndex: Int)->())?
+  @objc public var startIndex: Int = 0 {
     didSet {
       selectedIndex = startIndex
     }
@@ -107,7 +107,7 @@ open class ZFSegmentView: UIView {
   
   public private(set) var segmentlabels: [ZFSegmentLabel] = []
   
-  public init(frame: CGRect, contentEdge: UIEdgeInsets, configs: [ZFSegmentConfig], type: ZFSegmentViewLayoutType) {
+  @objc public init(frame: CGRect, contentEdge: UIEdgeInsets, configs: [ZFSegmentConfig], type: ZFSegmentViewLayoutType) {
     super.init(frame: frame)
     
     self.contentEdge = contentEdge
